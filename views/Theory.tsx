@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 import { getTopicDeepDive } from '../services/geminiService';
+import { STATIC_CONTENT } from '../services/staticContent';
 import { ArrowLeft, Loader2, RefreshCw, BookOpen, Terminal } from 'lucide-react';
 import { TOPICS } from '../constants';
 
@@ -19,7 +20,14 @@ export const Theory: React.FC = () => {
     setLoading(true);
     const cacheKey = `sql_arena_theory_${topicMeta.id}`;
     
-    // Try cache first
+    // 1. Check for Static Content (Instant Load)
+    if (!forceRefresh && STATIC_CONTENT[topicMeta.title]) {
+        setContent(STATIC_CONTENT[topicMeta.title]);
+        setLoading(false);
+        return;
+    }
+
+    // 2. Check LocalStorage Cache
     if (!forceRefresh) {
         const cached = localStorage.getItem(cacheKey);
         if (cached) {
@@ -29,7 +37,7 @@ export const Theory: React.FC = () => {
         }
     }
 
-    // Fetch from API
+    // 3. Fetch from AI (Fallback or Force Refresh)
     try {
         const text = await getTopicDeepDive(topicMeta.title);
         setContent(text);
@@ -68,7 +76,7 @@ export const Theory: React.FC = () => {
                 disabled={isRegenerating}
             >
                 <RefreshCw className="w-3 h-3 mr-1" />
-                {isRegenerating ? 'Regenerating...' : 'Refresh Notes'}
+                {isRegenerating ? 'Regenerating...' : 'Regenerate with AI'}
             </button>
         )}
       </div>
@@ -122,7 +130,7 @@ export const Theory: React.FC = () => {
                         li: ({node, ...props}) => (
                             <li className="flex items-start text-slate-300">
                                 <span className="mr-2 mt-2 w-1.5 h-1.5 bg-blue-500 rounded-full flex-shrink-0" />
-                                <span>{props.children}</span>
+                                <span className="leading-7">{props.children}</span>
                             </li>
                         ),
                         blockquote: ({node, ...props}) => (
@@ -136,7 +144,7 @@ export const Theory: React.FC = () => {
                             return isInline 
                                 ? <code className="bg-slate-800 text-blue-300 px-1.5 py-0.5 rounded text-sm font-mono border border-slate-700" {...props} />
                                 : (
-                                    <div className="my-6 rounded-lg overflow-hidden border border-slate-700 bg-slate-950 shadow-xl">
+                                    <div className="my-8 rounded-lg overflow-hidden border border-slate-700 bg-slate-950 shadow-xl">
                                         <div className="flex items-center justify-between px-4 py-2 bg-slate-900 border-b border-slate-800">
                                             <div className="flex space-x-1.5">
                                                 <div className="w-2.5 h-2.5 rounded-full bg-red-500/20" />
@@ -157,9 +165,9 @@ export const Theory: React.FC = () => {
                             </div>
                         ),
                         thead: ({node, ...props}) => <thead className="bg-slate-800 text-white" {...props} />,
-                        th: ({node, ...props}) => <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider border-b border-slate-700" {...props} />,
+                        th: ({node, ...props}) => <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider border-b border-slate-700 text-blue-400" {...props} />,
                         tr: ({node, ...props}) => <tr className="border-b border-slate-700/50 last:border-0 hover:bg-slate-800/30 transition-colors" {...props} />,
-                        td: ({node, ...props}) => <td className="px-6 py-4 text-sm text-slate-300" {...props} />,
+                        td: ({node, ...props}) => <td className="px-6 py-4 text-sm text-slate-300 whitespace-pre-wrap" {...props} />,
                     }}
                 >
                     {content}

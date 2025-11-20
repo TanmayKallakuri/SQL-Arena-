@@ -227,7 +227,7 @@ export const getTopicDeepDive = async (topicTitle: string): Promise<string> => {
     5. **Common Pitfalls**: Use a blockquote (>) to highlight traps mentioned in the slides (e.g. "Fan Traps").
     6. **Real-world Scenario**: Provide a concrete example (e.g. "Class of '26 Database").
 
-    Keep it educational, formal, and visually structured.
+    Keep it educational, formal, and visually structured. Ensure headers are clearly marked with #.
    `;
    
    try {
