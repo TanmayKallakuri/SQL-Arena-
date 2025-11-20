@@ -214,18 +214,20 @@ export const getTopicDeepDive = async (topicTitle: string): Promise<string> => {
    const curriculumContext = getContextForTopic(topicTitle);
    
    const prompt = `
-    Write a concise but "deep dive" tutorial on ${topicTitle} in SQL.
+    Write a comprehensive, textbook-quality tutorial on ${topicTitle} in SQL.
     
-    CRITICAL: The content MUST be based on these curriculum notes:
+    CRITICAL: The content MUST be strictly based on these curriculum notes and rules:
     ${curriculumContext}
 
-    Include:
-    1. Core Concepts (Definitions from curriculum)
-    2. Syntax (e.g. Window frames, EERD notation)
-    3. Common Pitfalls (e.g. Fan Traps, Partial Dependencies)
-    4. Live Code Examples.
-    
-    Format as valid Markdown.
+    Structure the response using standard Markdown:
+    1. **Title**: Use an H1 (#) for the main title.
+    2. **Introduction**: Brief summary of the concept.
+    3. **Key Concepts**: Use H2 (##) for sections. Use bolding (**text**) for key terms defined in the curriculum.
+    4. **Syntax & Examples**: Use code blocks (\`\`\`sql) for ALL SQL examples. Use Markdown Tables for comparing concepts (e.g. RANK vs DENSE_RANK).
+    5. **Common Pitfalls**: Use a blockquote (>) to highlight traps mentioned in the slides (e.g. "Fan Traps").
+    6. **Real-world Scenario**: Provide a concrete example (e.g. "Class of '26 Database").
+
+    Keep it educational, formal, and visually structured.
    `;
    
    try {
