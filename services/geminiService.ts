@@ -1,5 +1,7 @@
+
 import { GoogleGenAI, Type } from "@google/genai";
 import { Difficulty, EvaluationResult, QuizQuestion, SqlTopic } from "../types";
+import { STATIC_QUIZ_QUESTIONS } from "./staticContent";
 
 // Ensure API Key is present
 const apiKey = process.env.API_KEY || '';
@@ -81,6 +83,17 @@ const getContextForTopic = (topicTitle: string): string => {
 };
 
 export const generateQuizQuestion = async (topic: string, difficulty: Difficulty): Promise<QuizQuestion> => {
+  // 1. Try Static Bank First for Speed
+  const staticQuestions = STATIC_QUIZ_QUESTIONS[topic];
+  if (staticQuestions && staticQuestions.length > 0) {
+      // Simple randomization for now
+      const randomIndex = Math.floor(Math.random() * staticQuestions.length);
+      const q = staticQuestions[randomIndex];
+      // Add random ID component to force react re-render
+      return { ...q, id: `${q.id}_${Date.now()}` };
+  }
+
+  // 2. Fallback to AI Generation
   const curriculumContext = getContextForTopic(topic);
   
   const prompt = `

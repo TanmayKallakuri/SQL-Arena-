@@ -1,3 +1,6 @@
+
+import { QuizQuestion, Difficulty } from "../types";
+
 export const STATIC_CONTENT: Record<string, string> = {
   "Window Functions": `
 # Window Functions
@@ -259,4 +262,59 @@ Grouping multiple entities and relationships into a single abstract entity to si
   - *Pros*: Immutable, faster joins, no security risk (unlike SSN).
   - *Cons*: Disconnected from real-world meaning.
 `
+};
+
+// New Static Quiz Bank for Instant Loading
+export const STATIC_QUIZ_QUESTIONS: Record<string, QuizQuestion[]> = {
+  "window_functions": [
+    {
+      id: "wf_1",
+      topic: "Window Functions",
+      difficulty: Difficulty.INTERMEDIATE,
+      type: "query_writing",
+      questionText: "Write a query to rank employees by salary within each department. Use `DENSE_RANK()` so that if two employees have the same salary, they share the same rank, and the next rank is sequential.",
+      schemaContext: "Table: EMPLOYEES\n- EMP_ID (INT)\n- NAME (VARCHAR)\n- DEPT_ID (INT)\n- SALARY (INT)",
+      hints: ["Use PARTITION BY to group by department", "Use ORDER BY to sort by salary descending"]
+    },
+    {
+      id: "wf_2",
+      topic: "Window Functions",
+      difficulty: Difficulty.ADVANCED,
+      type: "query_writing",
+      questionText: "Calculate the 'Running Total' of sales for each sales representative, ordered by the date of sale.",
+      schemaContext: "Table: SALES\n- SALE_ID (INT)\n- REP_ID (INT)\n- SALE_DATE (DATE)\n- AMOUNT (DECIMAL)",
+      hints: ["Use SUM() as a window function", "The frame should be UNBOUNDED PRECEDING to CURRENT ROW"]
+    }
+  ],
+  "subqueries": [
+    {
+      id: "sq_1",
+      topic: "Subqueries",
+      difficulty: Difficulty.INTERMEDIATE,
+      type: "query_writing",
+      questionText: "Find the names of all products that have a price higher than the average price of ALL products.",
+      schemaContext: "Table: PRODUCTS\n- PROD_ID (INT)\n- PROD_NAME (VARCHAR)\n- PRICE (DECIMAL)",
+      hints: ["Calculate the average price in a subquery", "Use > operator with the scalar result"]
+    },
+    {
+      id: "sq_2",
+      topic: "Subqueries",
+      difficulty: Difficulty.ADVANCED,
+      type: "query_writing",
+      questionText: "List employees who earn more than the average salary of their respective department (Correlated Subquery).",
+      schemaContext: "Table: EMPLOYEES\n- EMP_ID (INT)\n- NAME (VARCHAR)\n- DEPT_ID (INT)\n- SALARY (INT)",
+      hints: ["The inner query needs to reference the outer query's department ID", "This creates an 'Outer Reference'"]
+    }
+  ],
+  "normalization": [
+    {
+      id: "norm_1",
+      topic: "Normalization",
+      difficulty: Difficulty.INTERMEDIATE,
+      type: "query_writing",
+      questionText: "Given a table `STUDENT_CLASSES (Student_ID, Student_Name, Class_ID, Class_Name)`, identify the partial dependency and write the SQL to split it into 2NF.",
+      schemaContext: "Current PK: (Student_ID, Class_ID)\nDependencies:\n- Student_ID -> Student_Name\n- Class_ID -> Class_Name",
+      hints: ["Student_Name depends only on part of the key", "Create separate tables for Students and Classes"]
+    }
+  ]
 };
