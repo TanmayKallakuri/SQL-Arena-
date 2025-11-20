@@ -1,0 +1,5 @@
+{
+  "name": "SQL Arena",
+  "description": "An interactive, AI-powered SQL learning platform with adaptive quizzes, deep-dive theory, and a competitive leaderboard.",
+  "requestFramePermissions": []
+}
